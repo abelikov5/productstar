@@ -1,0 +1,47 @@
+<!--
+    last visit script for productstar
+-->
+
+<div style="background-color:#0124ec; width: 100%;">
+    <a style="background-color:#0124ec; color:white; font-family:arial;" href="#" id="myLink">Перейти к последнему изученному материалу</a>
+</div>
+
+<script src="https://script.productstar.ru/mini_db/script.js"></script>
+<script>
+    let script_url = 'https://db.productstar.ru';
+    let cur_url = location.href;
+    let mini    = get_name_mini_course(cur_url);   //проверяем по массиву к какому mini курсу относится ссылка
+
+    setTimeout(myFoo, 1500) 
+    function myFoo () {
+        let email   = document.querySelector('.tlk__popup-login');
+
+        function http_req (url_1kl) {
+            console.log('start link open = ', url_1kl);
+            const request = new XMLHttpRequest();
+            request.open('GET', url_1kl, true);
+            request.setRequestHeader('Content-Type', 'text/plain');
+            request.addEventListener("load", () => {
+                if (request.status == 200) {
+                    if (request.responseText != 'false') {
+                        console.log('update link');
+                        document.getElementById("myLink").href = request.responseText; 
+                    }
+                    console.log("server resp", request.responseText);
+                  } else {
+                    console.log('status' + request.status + ': ' + request.statusText);
+                  }
+            });
+            request.send();
+        }
+
+        if (email) {
+            email = email.textContent;
+            email = email.replace(/[()]/gi, '');        // очищаем от скобок
+        }
+
+        if (mini) {
+            let last_page = http_req(script_url + '?mini=' + mini + '&url=' + url + '&email=' + email);
+        }
+    }
+</script>
